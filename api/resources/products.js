@@ -40,7 +40,7 @@ router.patch('/:productId/priceUpdate',(req,res,next)=>{
 
 router.post('/:productId/buy',(req,res,next)=>{
     res.status(200).json({
-        message: 'Buy a product and modifie the stock'
+        message: 'Buy a product and modify the stock'
     });
 });
 
