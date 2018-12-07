@@ -1,10 +1,18 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-
+const mongoose = require('mongoose');
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+
+//Conection to mongoose atlas
+mongoose.connect('mongodb://admin:KwKmV2SythtKusyV@snackapi-cluster-shard-00-00-a7ywm.mongodb.net:27017,snackapi-cluster-shard-00-01-a7ywm.mongodb.net:27017,snackapi-cluster-shard-00-02-a7ywm.mongodb.net:27017/test?ssl=true&replicaSet=snackAPI-cluster-shard-0&authSource=admin&retryWrites=true',
+{
+    //useMongoClient: true
+    useNewUrlParser: true
+}
+);
 
 //HANDLE CORS errors just in case
 app.use((req,res,next) => {

@@ -1,16 +1,50 @@
 const express = require('express');
 const router = express.Router();
 
+//impor the model and mongoose
+const mongoose = require('mongoose');
+const Product = require('../models/product');
+
 router.get('/',(req,res,next)=>{
-    res.status(200).json({
-        message: 'Obtain all the products'
+    Product.find()
+    .exec()
+    .then(docs => {
+        console.log(docs);
+        res.status(200).json(docs);
+    })
+    .catch(err =>{
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
     });
 });
 
 router.post('/',(req,res,next)=>{
-    res.status(200).json({
-        message: 'Add new product'
+    //create new product
+    const product = new Product({
+        _id: new mongoose.Types.ObjectId(),
+        name: req.body.name,
+        brand: req.body.brand,
+        price: req.body.price,
+        stock: req.body.stock,
+        likes: req.body.likes
     });
+    product
+        .save()
+        .then(result => {
+            console.log(result);
+            res.status(201).json({
+            message: 'Added new Product',
+            createdProduct: product
+            });
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
 });
 
 router.get('/sort/:sort',(req,res,next)=>{
@@ -21,14 +55,36 @@ router.get('/sort/:sort',(req,res,next)=>{
 });
 
 router.get('/:productName',(req,res,next)=>{
-    res.status(200).json({
-        message: 'Obtain a product by its name'
+    const name = req.params.productName;
+    Product.find({name: name})
+    .exec()
+    .then(docs => {
+        console.log(docs);
+        res.status(200).json(docs);
+    })
+    .catch(err =>{
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
     });
 });
 
 router.delete('/:productId/delete',(req,res,next)=>{
-    res.status(200).json({
-        message: 'Delete a product'
+    const id = req.params.productId;
+    Product.deleteOne({_id: id})
+    .exec()
+    .then(result =>{
+        console.log(result);
+        res.status(200).json({
+            message: 'Deleted'
+        });
+    })
+    .catch(err =>{
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
     });
 });
 
